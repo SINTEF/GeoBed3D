@@ -1,0 +1,120 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "Title goes here",
+        "color": "#0c75e1",
+        "note": "This is <strong>bold text</strong>.<br>We can have linebreaks of one or two lines or more.<br><br>This is <i>italic text</i>.",
+        "noteimage": "https://images.pexels.com/photos/12166198/pexels-photo-12166198.jpeg",
+        "iconsize": "medium"
+      },
+      "geometry": {
+        "coordinates": [
+          15.408887694525959,
+          68.6895483771981
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "Custom icon",
+        "color": "#fff000",
+        "note": "This is <strong>text</strong><br>This is a <a href='https://google.com'>link</a>",
+        "noteimage": "https://images.pexels.com/photos/37956583/pexels-photo-37956583.jpeg",
+        "icon": "https://assets.stickpng.com/thumbs/580b57fbd9996e24bc43c063.png",
+        "iconsize": "large"
+      },
+      "geometry": {
+        "coordinates": [
+          15.376523324045621,
+          68.67767300911007
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "Polygon title",
+        "color": "#fff000",
+        "note": "This is the <strong>polygon text</strong><br>Nice!",
+        "noteimage": "https://images.pexels.com/photos/37971668/pexels-photo-37971668.jpeg",
+        "opacity": 40
+      },
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              15.388203417114198,
+              68.69743189654147
+            ],
+            [
+              15.320676794332513,
+              68.67893890579012
+            ],
+            [
+              15.365377516455396,
+              68.66657290984344
+            ],
+            [
+              15.412931476161049,
+              68.69103885456653
+            ],
+            [
+              15.388203417114198,
+              68.69743189654147
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "Line title",
+        "color": "#2aff00",
+        "note": "this is the <strong>line's text</strong><br>Great!",
+        "noteimage": "https://images.pexels.com/photos/37934027/pexels-photo-37934027.jpeg"
+      },
+      "geometry": {
+        "coordinates": [
+          [
+            15.25481456014083,
+            68.65021855019307
+          ],
+          [
+            15.304983987629726,
+            68.66293964014284
+          ]
+        ],
+        "type": "LineString"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "Another large line",
+        "color": "#ffa000",
+        "linesize": "large"
+      },
+      "geometry": {
+        "coordinates": [
+          [
+            15.259570296774484,
+            68.6454571742814
+          ],
+          [
+            15.310453033660252,
+            68.6550656058906
+          ]
+        ],
+        "type": "LineString"
+      }
+    }
+  ]
+}

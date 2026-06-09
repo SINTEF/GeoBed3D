@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GeoJSON Styling Guide — GeoBed3D</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #0b1120;
+      color: #cbd5e1;
+      line-height: 1.65;
+      padding: 2rem 1rem;
+    }
+
+    .page {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .site-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 2.5rem;
+      border-bottom: 1px solid #1e2d45;
+      padding-bottom: 1.25rem;
+    }
+    .logo { font-size: 1.5rem; font-weight: 700; color: #f1f5f9; }
+    .logo span { color: #3b82f6; }
+    .subtitle { color: #64748b; font-size: 0.9rem; }
+
+    /* Section */
+    section { margin-bottom: 3rem; }
+
+    h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #f1f5f9;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    h2 .tag {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .tag-point   { background: #1e3a5f; color: #60a5fa; }
+    .tag-polygon { background: #1a3a2a; color: #34d399; }
+    .tag-line    { background: #3a1a1a; color: #f87171; }
+
+    h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #94a3b8;
+      margin: 1.5rem 0 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    p { margin-bottom: 0.75rem; color: #94a3b8; }
+
+    /* Property table */
+    .prop-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1.25rem;
+      font-size: 0.875rem;
+    }
+    .prop-table th {
+      text-align: left;
+      padding: 0.5rem 0.75rem;
+      background: #0f1929;
+      color: #64748b;
+      font-weight: 600;
+      border-bottom: 1px solid #1e2d45;
+    }
+    .prop-table td {
+      padding: 0.6rem 0.75rem;
+      border-bottom: 1px solid #131f30;
+      vertical-align: top;
+    }
+    .prop-table tr:last-child td { border-bottom: none; }
+    .prop-table tr:hover td { background: #0d1a2e; }
+
+    code {
+      font-family: 'Menlo', 'Monaco', monospace;
+      font-size: 0.82rem;
+      background: #0f1929;
+      color: #7dd3fc;
+      padding: 0.1rem 0.35rem;
+      border-radius: 3px;
+    }
+
+    /* Code block */
+    pre {
+      background: #0a1020;
+      border: 1px solid #1e2d45;
+      border-radius: 8px;
+      padding: 1.25rem;
+      overflow-x: auto;
+      font-size: 0.82rem;
+      line-height: 1.7;
+      margin-bottom: 1.25rem;
+    }
+    pre code {
+      background: none;
+      color: #e2e8f0;
+      padding: 0;
+      font-size: inherit;
+    }
+    .c  { color: #475569; } /* comment */
+    .k  { color: #7dd3fc; } /* key */
+    .s  { color: #86efac; } /* string value */
+    .n  { color: #fbbf24; } /* number value */
+    .p  { color: #cbd5e1; } /* punctuation */
+
+    /* Note box */
+    .note {
+      background: #0f1929;
+      border-left: 3px solid #3b82f6;
+      padding: 0.75rem 1rem;
+      border-radius: 0 6px 6px 0;
+      margin-bottom: 1rem;
+      font-size: 0.875rem;
+      color: #94a3b8;
+    }
+    .note strong { color: #7dd3fc; }
+
+    /* Swatch */
+    .swatch {
+      display: inline-block;
+      width: 12px; height: 12px;
+      border-radius: 3px;
+      vertical-align: middle;
+      margin-right: 4px;
+    }
+
+    hr { border: none; border-top: 1px solid #1e2d45; margin: 2rem 0; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <header class="site-header">
+    <div class="logo">Geo<span>3D</span></div>
+    <div class="subtitle">GeoJSON Styling Guide</div>
+  </header>
+
+  <p style="margin-bottom:2rem;">
+    GeoBed3D reads standard GeoJSON files and uses a set of custom properties
+    to control how each feature looks on the 3D globe. Add these properties
+    inside the <code>properties</code> object of each feature.
+    Properties not listed here are displayed in the info panel when you click a feature.
+  </p>
+
+  <!-- ===== SHARED ===== -->
+  <section>
+    <h2>Shared properties <small style="font-size:0.8rem;font-weight:400;color:#64748b;margin-left:0.5rem">— work on all geometry types</small></h2>
+
+    <table class="prop-table">
+      <thead>
+        <tr><th>Property</th><th>Type</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>color</code></td>
+          <td>hex string</td>
+          <td>Feature colour — <code>#ff0000</code>, <code>#3b82f6</code>, etc. Overrides the layer auto-colour.</td>
+        </tr>
+        <tr>
+          <td><code>title</code></td>
+          <td>string</td>
+          <td>Label shown floating above the feature on the map. Also used as the heading in the info panel.</td>
+        </tr>
+        <tr>
+          <td><code>note</code></td>
+          <td>string / HTML</td>
+          <td>
+            Description shown in the info panel when the feature is clicked.
+            Supports a limited set of HTML tags:<br><br>
+            <code>&lt;strong&gt;</code><code>&lt;/strong&gt;</code> — bold text<br>
+            <code>&lt;i&gt;</code><code>&lt;/i&gt;</code> — italic text<br>
+            <code>&lt;br&gt;</code> — line break<br>
+            <code>&lt;a href="…"&gt;</code><code>&lt;/a&gt;</code> — hyperlink (always opens in a new tab)<br><br>
+            Example: <code>"Visit &lt;a href='https://example.com'&gt;the site&lt;/a&gt; for more."</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>noteimage</code></td>
+          <td>URL string</td>
+          <td>Image URL shown in the info panel below the title. Any publicly accessible image works.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <hr />
+
+  <!-- ===== POINTS ===== -->
+  <section>
+    <h2><span class="tag tag-point">Points</span> Point features</h2>
+    <p>A point is rendered as a teardrop pin by default. Supply an <code>icon</code> URL to replace it with any image.</p>
+
+    <table class="prop-table">
+      <thead>
+        <tr><th>Property</th><th>Values</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>iconsize</code></td>
+          <td><code>small</code> · <code>medium</code> · <code>large</code></td>
+          <td>Controls the size of the pin or icon. Default: <code>medium</code>. Also scales the title label offset.</td>
+        </tr>
+        <tr>
+          <td><code>icon</code></td>
+          <td>URL string</td>
+          <td>Replaces the default teardrop pin with a custom image. PNG with transparency works best. The image is loaded via the local proxy so CORS is not a concern.</td>
+        </tr>
+        <tr>
+          <td><code>color</code></td>
+          <td>hex string</td>
+          <td>Tints the default teardrop pin. Has no effect when a custom <code>icon</code> is set.</td>
+        </tr>
+        <tr>
+          <td><code>title</code></td>
+          <td>string</td>
+          <td>Text label rendered inside/above the pin on the map.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Icon sizes (pixels)</h3>
+    <table class="prop-table">
+      <thead><tr><th>iconsize</th><th>Pin size</th><th>Dot fallback size</th></tr></thead>
+      <tbody>
+        <tr><td><code>small</code></td><td>24 × 24 px</td><td>7 px radius</td></tr>
+        <tr><td><code>medium</code></td><td>36 × 36 px</td><td>10 px radius</td></tr>
+        <tr><td><code>large</code></td><td>56 × 56 px</td><td>16 px radius</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Example</h3>
+<pre><code><span class="p">{</span>
+  <span class="k">"type"</span><span class="p">:</span> <span class="s">"Feature"</span><span class="p">,</span>
+  <span class="k">"geometry"</span><span class="p">: {</span>
+    <span class="k">"type"</span><span class="p">:</span> <span class="s">"Point"</span><span class="p">,</span>
+    <span class="k">"coordinates"</span><span class="p">:</span> <span class="p">[</span><span class="n">23.7275</span><span class="p">,</span> <span class="n">37.9838</span><span class="p">]</span>
+  <span class="p">},</span>
+  <span class="k">"properties"</span><span class="p">: {</span>
+    <span class="k">"title"</span><span class="p">:</span>     <span class="s">"Acropolis"</span><span class="p">,</span>
+    <span class="k">"note"</span><span class="p">:</span>      <span class="s">"Ancient citadel of Athens"</span><span class="p">,</span>
+    <span class="k">"noteimage"</span><span class="p">:</span> <span class="s">"https://example.com/acropolis.jpg"</span><span class="p">,</span>
+    <span class="k">"color"</span><span class="p">:</span>     <span class="s">"#f59e0b"</span><span class="p">,</span>
+    <span class="k">"iconsize"</span><span class="p">:</span>  <span class="s">"large"</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre>
+
+    <h3>Example with custom icon</h3>
+<pre><code><span class="p">{</span>
+  <span class="k">"type"</span><span class="p">:</span> <span class="s">"Feature"</span><span class="p">,</span>
+  <span class="k">"geometry"</span><span class="p">: {</span> <span class="k">"type"</span><span class="p">:</span> <span class="s">"Point"</span><span class="p">,</span> <span class="k">"coordinates"</span><span class="p">:</span> <span class="p">[</span><span class="n">23.7275</span><span class="p">,</span> <span class="n">37.9838</span><span class="p">]</span> <span class="p">},</span>
+  <span class="k">"properties"</span><span class="p">: {</span>
+    <span class="k">"title"</span><span class="p">:</span>    <span class="s">"Museum"</span><span class="p">,</span>
+    <span class="k">"icon"</span><span class="p">:</span>     <span class="s">"https://example.com/museum-icon.png"</span><span class="p">,</span>
+    <span class="k">"iconsize"</span><span class="p">:</span> <span class="s">"medium"</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre>
+  </section>
+
+  <hr />
+
+  <!-- ===== POLYGONS ===== -->
+  <section>
+    <h2><span class="tag tag-polygon">Polygons</span> Polygon features</h2>
+    <p>Polygons are draped on the terrain surface and filled with a semi-transparent colour.</p>
+
+    <table class="prop-table">
+      <thead>
+        <tr><th>Property</th><th>Values</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>color</code></td>
+          <td>hex string</td>
+          <td>Stroke and fill colour. The fill is automatically made semi-transparent based on <code>opacity</code>.</td>
+        </tr>
+        <tr>
+          <td><code>opacity</code></td>
+          <td>0 – 100</td>
+          <td>Fill opacity as a percentage. <code>0</code> = fully transparent, <code>100</code> = fully opaque. Default: <code>75</code>.</td>
+        </tr>
+        <tr>
+          <td><code>title</code></td>
+          <td>string</td>
+          <td>Label rendered at the polygon centroid on the map.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="note">
+      <strong>Tip:</strong> Keep <code>opacity</code> between 30–60 for best results — the terrain texture shows through and the polygon remains clearly visible.
+    </div>
+
+    <h3>Example</h3>
+<pre><code><span class="p">{</span>
+  <span class="k">"type"</span><span class="p">:</span> <span class="s">"Feature"</span><span class="p">,</span>
+  <span class="k">"geometry"</span><span class="p">: {</span>
+    <span class="k">"type"</span><span class="p">:</span> <span class="s">"Polygon"</span><span class="p">,</span>
+    <span class="k">"coordinates"</span><span class="p">:</span> <span class="p">[[</span>
+      <span class="p">[</span><span class="n">23.71</span><span class="p">,</span> <span class="n">37.97</span><span class="p">],</span> <span class="p">[</span><span class="n">23.74</span><span class="p">,</span> <span class="n">37.97</span><span class="p">],</span>
+      <span class="p">[</span><span class="n">23.74</span><span class="p">,</span> <span class="n">37.94</span><span class="p">],</span> <span class="p">[</span><span class="n">23.71</span><span class="p">,</span> <span class="n">37.94</span><span class="p">],</span>
+      <span class="p">[</span><span class="n">23.71</span><span class="p">,</span> <span class="n">37.97</span><span class="p">]</span>
+    <span class="p">]]</span>
+  <span class="p">},</span>
+  <span class="k">"properties"</span><span class="p">: {</span>
+    <span class="k">"title"</span><span class="p">:</span>   <span class="s">"Historic Centre"</span><span class="p">,</span>
+    <span class="k">"color"</span><span class="p">:</span>   <span class="s">"#3b82f6"</span><span class="p">,</span>
+    <span class="k">"opacity"</span><span class="p">:</span> <span class="n">40</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre>
+  </section>
+
+  <hr />
+
+  <!-- ===== LINES ===== -->
+  <section>
+    <h2><span class="tag tag-line">Lines</span> LineString features</h2>
+    <p>Lines are rendered as solid-colour polylines clamped to the terrain surface at a fixed width of 10 px.</p>
+
+    <table class="prop-table">
+      <thead>
+        <tr><th>Property</th><th>Values</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>color</code></td>
+          <td>hex string</td>
+          <td>Solid line colour. If omitted the layer auto-colour is used.</td>
+        </tr>
+        <tr>
+          <td><code>title</code></td>
+          <td>string</td>
+          <td>Label shown at the first coordinate of the line.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Example</h3>
+<pre><code><span class="p">{</span>
+  <span class="k">"type"</span><span class="p">:</span> <span class="s">"Feature"</span><span class="p">,</span>
+  <span class="k">"geometry"</span><span class="p">: {</span>
+    <span class="k">"type"</span><span class="p">:</span> <span class="s">"LineString"</span><span class="p">,</span>
+    <span class="k">"coordinates"</span><span class="p">:</span> <span class="p">[</span>
+      <span class="p">[</span><span class="n">23.71</span><span class="p">,</span> <span class="n">37.98</span><span class="p">],</span>
+      <span class="p">[</span><span class="n">23.73</span><span class="p">,</span> <span class="n">37.96</span><span class="p">],</span>
+      <span class="p">[</span><span class="n">23.75</span><span class="p">,</span> <span class="n">37.95</span><span class="p">]</span>
+    <span class="p">]</span>
+  <span class="p">},</span>
+  <span class="k">"properties"</span><span class="p">: {</span>
+    <span class="k">"title"</span><span class="p">:</span> <span class="s">"Walking route"</span><span class="p">,</span>
+    <span class="k">"color"</span><span class="p">:</span> <span class="s">"#10b981"</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre>
+  </section>
+
+  <hr />
+
+  <!-- ===== FULL EXAMPLE ===== -->
+  <section>
+    <h2>Full FeatureCollection example</h2>
+<pre><code><span class="p">{</span>
+  <span class="k">"type"</span><span class="p">:</span> <span class="s">"FeatureCollection"</span><span class="p">,</span>
+  <span class="k">"features"</span><span class="p">:</span> <span class="p">[</span>
+
+    <span class="c">// Point — large amber pin with label and info panel content</span>
+    <span class="p">{</span>
+      <span class="k">"type"</span><span class="p">:</span> <span class="s">"Feature"</span><span class="p">,</span>
+      <span class="k">"geometry"</span><span class="p">: {</span> <span class="k">"type"</span><span class="p">:</span> <span class="s">"Point"</span><span class="p">,</span> <span class="k">"coordinates"</span><span class="p">:</span> <span class="p">[</span><span class="n">23.7275</span><span class="p">,</span> <span class="n">37.9838</span><span class="p">]</span> <span class="p">},</span>
+      <span class="k">"properties"</span><span class="p">: {</span>
+        <span class="k">"title"</span><span class="p">:</span>     <span class="s">"Acropolis"</span><span class="p">,</span>
+        <span class="k">"note"</span><span class="p">:</span>      <span class="s">"Ancient citadel built in the 5th century BC"</span><span class="p">,</span>
+        <span class="k">"noteimage"</span><span class="p">:</span> <span class="s">"https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/The_Parthenon_in_Athens.jpg/320px-The_Parthenon_in_Athens.jpg"</span><span class="p">,</span>
+        <span class="k">"color"</span><span class="p">:</span>     <span class="s">"#f59e0b"</span><span class="p">,</span>
+        <span class="k">"iconsize"</span><span class="p">:</span>  <span class="s">"large"</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+
+    <span class="c">// Polygon — blue zone at 40% opacity</span>
+    <span class="p">{</span>
+      <span class="k">"type"</span><span class="p">:</span> <span class="s">"Feature"</span><span class="p">,</span>
+      <span class="k">"geometry"</span><span class="p">: {</span>
+        <span class="k">"type"</span><span class="p">:</span> <span class="s">"Polygon"</span><span class="p">,</span>
+        <span class="k">"coordinates"</span><span class="p">:</span> <span class="p">[[[</span><span class="n">23.71</span><span class="p">,</span><span class="n">37.97</span><span class="p">],[</span><span class="n">23.74</span><span class="p">,</span><span class="n">37.97</span><span class="p">],[</span><span class="n">23.74</span><span class="p">,</span><span class="n">37.94</span><span class="p">],[</span><span class="n">23.71</span><span class="p">,</span><span class="n">37.94</span><span class="p">],[</span><span class="n">23.71</span><span class="p">,</span><span class="n">37.97</span><span class="p">]]]</span>
+      <span class="p">},</span>
+      <span class="k">"properties"</span><span class="p">: {</span>
+        <span class="k">"title"</span><span class="p">:</span>   <span class="s">"Old Town"</span><span class="p">,</span>
+        <span class="k">"color"</span><span class="p">:</span>   <span class="s">"#3b82f6"</span><span class="p">,</span>
+        <span class="k">"opacity"</span><span class="p">:</span> <span class="n">40</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+
+    <span class="c">// Line — green route</span>
+    <span class="p">{</span>
+      <span class="k">"type"</span><span class="p">:</span> <span class="s">"Feature"</span><span class="p">,</span>
+      <span class="k">"geometry"</span><span class="p">: {</span>
+        <span class="k">"type"</span><span class="p">:</span> <span class="s">"LineString"</span><span class="p">,</span>
+        <span class="k">"coordinates"</span><span class="p">:</span> <span class="p">[[</span><span class="n">23.71</span><span class="p">,</span><span class="n">37.98</span><span class="p">],[</span><span class="n">23.73</span><span class="p">,</span><span class="n">37.96</span><span class="p">],[</span><span class="n">23.75</span><span class="p">,</span><span class="n">37.95</span><span class="p">]]</span>
+      <span class="p">},</span>
+      <span class="k">"properties"</span><span class="p">: {</span>
+        <span class="k">"title"</span><span class="p">:</span> <span class="s">"Walking route"</span><span class="p">,</span>
+        <span class="k">"color"</span><span class="p">:</span> <span class="s">"#10b981"</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+  <span class="p">]</span>
+<span class="p">}</span></code></pre>
+  </section>
+
+</div>
+</body>
+</html>

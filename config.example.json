@@ -1,0 +1,7 @@
+{
+  "SITE_PASSWORD":    "",
+  "CESIUM_TOKEN":     "",
+  "MAPTILER_KEY":     "",
+  "BW_CLIENT_ID":     "your-email@example.com:AppName",
+  "BW_CLIENT_SECRET": ""
+}

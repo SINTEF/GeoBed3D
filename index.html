@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GeoBed3D — 3D GeoJSON Viewer</title>
+
+  <!-- CesiumJS -->
+  <script src="https://cesium.com/downloads/cesiumjs/releases/1.139.1/Build/Cesium/Cesium.js"></script>
+  <link href="https://cesium.com/downloads/cesiumjs/releases/1.139.1/Build/Cesium/Widgets/widgets.css" rel="stylesheet" />
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌍</text></svg>" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Loading screen -->
+  <div id="loading">
+    <div class="loading-logo">GeoBed<span>3D</span></div>
+    <div id="loading-bar-wrap">
+      <div id="loading-bar"></div>
+    </div>
+    <div class="loading-text" id="loading-text">Initializing 3D environment…</div>
+  </div>
+
+  <!-- 3D Viewer -->
+  <div id="cesiumContainer"></div>
+  <div id="label-overlay"></div>
+
+<!-- ===== TOP BAR ===== -->
+  <header id="topbar">
+    <div id="logo">
+      <div class="logo-icon">🌍</div>
+      GeoBed<span class="accent">3D</span>
+    </div>
+
+    <div id="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input type="text" id="search-input" placeholder="Search location…" autocomplete="off" />
+      <div id="search-results"></div>
+    </div>
+
+    <div class="topbar-actions">
+      <button class="topbar-btn" id="world-btn" title="Switch world base layer">
+        <span class="btn-icon">🌐</span> <span id="world-label">World Terrain</span>
+      </button>
+      <button class="topbar-btn" id="labels-btn" title="Toggle Google Maps labels overlay">
+        <span class="btn-icon">🏷️</span> Labels
+      </button>
+      <button class="topbar-btn" id="buildings-btn" title="Toggle 3D buildings">
+        <span class="btn-icon">🏙️</span> Buildings
+      </button>
+      <button class="topbar-btn" id="photos-btn" title="Toggle Wikimedia Commons geotagged photos">
+        <span class="btn-icon">📷</span> Photos
+      </button>
+      <button class="topbar-btn" id="roads-btn" title="Toggle road network (OSM, auto-refreshes on pan)">
+        <span class="btn-icon">🛣️</span> Roads
+      </button>
+      <button class="topbar-btn" id="sun-btn" title="Lighting mode">
+        <span class="btn-icon">☀️</span> <span id="sun-label">All-day</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ===== SUN PANEL ===== -->
+  <div id="sun-panel">
+    <label class="sun-option">
+      <input type="radio" name="sun-mode" value="allday" checked />
+      <span class="sun-option-icon">☀️</span>
+      <span class="sun-option-text">
+        <strong>All-day light</strong>
+        <small>Uniform bright lighting, no night side</small>
+      </span>
+    </label>
+    <label class="sun-option">
+      <input type="radio" name="sun-mode" value="real" />
+      <span class="sun-option-icon">🌍</span>
+      <span class="sun-option-text">
+        <strong>Real sun</strong>
+        <small>Live position based on current date &amp; time</small>
+      </span>
+    </label>
+    <label class="sun-option">
+      <input type="radio" name="sun-mode" value="manual" />
+      <span class="sun-option-icon">🕹️</span>
+      <span class="sun-option-text">
+        <strong>Manual</strong>
+        <small>Drag the sun along its trajectory</small>
+      </span>
+    </label>
+    <div id="sun-slider-wrap">
+      <div class="sun-slider-labels">
+        <span>🌅 Dawn</span>
+        <span id="sun-time-display">12:00</span>
+        <span>🌆 Dusk</span>
+      </div>
+      <input type="range" id="sun-slider" min="0" max="1440" value="720" step="1" />
+      <div class="sun-slider-labels" style="margin-top:10px">
+        <span>Jan</span>
+        <span id="sun-date-display">Today</span>
+        <span>Dec</span>
+      </div>
+      <input type="range" id="sun-day-slider" min="0" max="364" value="0" step="1" />
+    </div>
+  </div>
+
+  <!-- ===== WORLD PANEL ===== -->
+  <div id="world-panel">
+    <label class="sun-option">
+      <input type="radio" name="world-mode" value="terrain" checked />
+      <span class="sun-option-icon">⛰️</span>
+      <span class="sun-option-text">
+        <strong>World Terrain</strong>
+        <small>Cesium terrain — land &amp; ocean floor</small>
+      </span>
+    </label>
+    <label class="sun-option">
+      <input type="radio" name="world-mode" value="bathymetry" />
+      <span class="sun-option-icon">🌊</span>
+      <span class="sun-option-text">
+        <strong>Bathymetry</strong>
+        <small>Cesium World Bathymetry — ocean floor depth</small>
+      </span>
+    </label>
+    <label class="sun-option">
+      <input type="radio" name="world-mode" value="google3d" />
+      <span class="sun-option-icon">🏙️</span>
+      <span class="sun-option-text">
+        <strong>Google Photorealistic 3D</strong>
+        <small>Google photorealistic 3D tiles</small>
+      </span>
+    </label>
+    <label class="sun-option">
+      <input type="radio" name="world-mode" value="opentopomap" />
+      <span class="sun-option-icon">🗺️</span>
+      <span class="sun-option-text">
+        <strong>OpenTopoMap</strong>
+        <small>OSM topo — colored terrain, blue sea, no key needed</small>
+      </span>
+    </label>
+    <label class="sun-option">
+      <input type="radio" name="world-mode" value="maptiler" />
+      <span class="sun-option-icon">🎨</span>
+      <span class="sun-option-text">
+        <strong>Maptiler Outdoor</strong>
+        <small>Styled topo map — requires free Maptiler key</small>
+      </span>
+    </label>
+  </div>
+
+  <!-- ===== SIDE PANEL ===== -->
+  <aside id="side-panel">
+    <div class="panel-header">
+      <span class="panel-title" id="side-panel-title">Layers</span>
+      <button class="icon-btn" id="clear-all-btn" title="Clear all layers">🗑</button>
+    </div>
+
+    <div class="side-tabs">
+      <button class="side-tab active" data-tab="geojson">GeoJSON</button>
+      <button class="side-tab" data-tab="apis">APIs</button>
+      <button class="side-tab" data-tab="fcm">FCM</button>
+    </div>
+
+    <!-- GeoJSON tab -->
+    <div class="side-tab-content active" id="tab-geojson">
+      <div id="upload-area" title="Drop GeoJSON files or click to browse">
+        <input type="file" id="file-input" accept=".geojson,.json" multiple />
+        <div class="upload-icon">📂</div>
+        <div class="upload-text">Drop GeoJSON here</div>
+      </div>
+
+      <div id="layers-container">
+        <div id="empty-state">
+          <div class="empty-icon">🗺️</div>
+          <p>No layers loaded yet.</p>
+          <p class="hint">Drop a GeoJSON file to start.</p>
+        </div>
+        <div id="layers-list"></div>
+      </div>
+
+      <a href="geojson-manual.html" target="_blank" rel="noopener" class="geojson-guide-link">
+        📖 GeoJSON Styling Guide — how to style points, polygons &amp; lines
+      </a>
+    </div>
+
+    <!-- APIs tab -->
+    <div class="side-tab-content" id="tab-apis">
+      <div class="apis-section">
+
+        <select id="apis-country" class="apis-country-select">
+          <option value="norway">🇳🇴 Norway</option>
+        </select>
+
+        <!-- Norway APIs -->
+        <div class="apis-country-apis" id="apis-norway">
+
+          <!-- BarentsWatch Live AIS -->
+          <div class="api-card">
+            <div class="api-card-header">
+              <div class="api-card-info">
+                <span class="api-card-icon">⚓</span>
+                <div>
+                  <div class="api-card-name">Live AIS Traffic</div>
+                  <div class="api-card-desc">BarentsWatch · real-time vessels</div>
+                </div>
+              </div>
+              <button class="api-toggle-btn" id="ais-toggle"></button>
+            </div>
+            <div class="api-card-meta" id="ais-meta">
+              <span id="ais-count" class="api-status-badge">0 vessels</span>
+              <button class="layer-act-btn" id="ais-flyto-btn" title="Fly to vessels">⊕</button>
+            </div>
+            <div class="api-card-creds" id="ais-creds"></div>
+            <div class="ais-filters" id="ais-filters">
+              <button class="ais-filter-btn active" data-filter="all">All</button>
+              <button class="ais-filter-btn" data-filter="Fishing">Fishing</button>
+              <button class="ais-filter-btn" data-filter="Cargo">Cargo</button>
+              <button class="ais-filter-btn" data-filter="Passenger">Passenger</button>
+              <button class="ais-filter-btn" data-filter="Military">Military</button>
+            </div>
+            <div class="ais-legend" id="ais-legend">
+              <div class="ais-legend-item"><span class="ais-dot" style="background:#3b82f6"></span>Cargo</div>
+              <div class="ais-legend-item"><span class="ais-dot" style="background:#f97316"></span>Tanker</div>
+              <div class="ais-legend-item"><span class="ais-dot" style="background:#10b981"></span>Passenger</div>
+              <div class="ais-legend-item"><span class="ais-dot" style="background:#fbbf24"></span>Fishing</div>
+              <div class="ais-legend-item"><span class="ais-dot" style="background:#8b5cf6"></span>Tug / Work</div>
+              <div class="ais-legend-item"><span class="ais-dot" style="background:#06b6d4"></span>High Speed</div>
+              <div class="ais-legend-item"><span class="ais-dot" style="background:#ef4444"></span>Military</div>
+              <div class="ais-legend-item"><span class="ais-dot" style="background:#ec4899"></span>Pleasure</div>
+              <div class="ais-legend-item"><span class="ais-dot" style="background:#94a3b8"></span>Other</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- FCM tab — To remove: delete this block -->
+    <div class="side-tab-content" id="tab-fcm">
+      <div class="fcm-section">
+
+        <!-- Upload area (hidden once model loads) -->
+        <div id="fcm-pre-load">
+          <div id="fcm-upload-area" title="Drop FCM GeoJSON, or click to browse">
+            <input type="file" id="fcm-file-input" accept=".json,.geojson" />
+            <div class="upload-icon">🧠</div>
+            <div class="upload-text">Drop FCM GeoJSON here</div>
+            <div class="upload-hint">.geojson with nodes/edges/state</div>
+          </div>
+        </div>
+
+        <!-- Controls (shown after a model is loaded) -->
+        <div id="fcm-controls">
+
+          <div class="fcm-toggle-row">
+            <span class="fcm-section-title" style="margin:0">Show on map</span>
+            <div style="display:flex;align-items:center;gap:6px">
+              <button class="layer-act-btn" id="fcm-flyto-btn" title="Fly to model">⊕</button>
+              <label class="fcm-switch">
+                <input type="checkbox" id="fcm-toggle">
+                <span class="fcm-switch-track"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="fcm-section-title" style="margin-top:4px">Nodes</div>
+          <div id="fcm-nodes"></div>
+
+          <div class="fcm-divider"></div>
+          <div class="fcm-section-title">Edges (<span id="fcm-edge-count">0</span>)</div>
+          <div id="fcm-edge-list"></div>
+
+          <div class="fcm-actions">
+            <button id="fcm-reset-btn"    class="fcm-btn-ghost">Reset to 0.50</button>
+            <button id="fcm-initial-btn"  class="fcm-btn-ghost">Initial state</button>
+            <button id="fcm-animate-btn"  class="fcm-btn-ghost">Timeflow <span class="timeflow-info-icon">ⓘ<span class="timeflow-tooltip">Propagates values forward through the causal network step by step, showing how an initial state ripples through connected nodes and converges to a system equilibrium.</span></span></button>
+          </div>
+
+          <button id="fcm-reload-btn" class="fcm-btn-ghost" style="width:100%;margin-top:2px">↺ Load another model</button>
+
+        </div>
+
+      </div>
+
+      <!-- Schema guide — pinned outside scroll area, always visible -->
+      <details class="fcm-guide">
+        <summary class="fcm-guide-title">GeoJSON format reference</summary>
+        <div class="fcm-guide-body">
+          <pre class="fcm-guide-pre">{
+  "type": "FeatureCollection",
+
+  "edges": [
+    { "from": "co2",
+      "to":   "sea_temp",
+      "weight": 0.7 }
+  ],
+
+  "features": [{
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [15.5, 69.3]
+    },
+    "properties": {
+      "id":        "co2",
+      "label":     "CO₂",
+      "fcm_value": 0.5
+    }
+  }]
+}</pre>
+          <div class="fcm-guide-notes">
+            <div class="fcm-guide-note"><span class="fcm-note-key">coordinates</span> [lon, lat] — standard GeoJSON order</div>
+            <div class="fcm-guide-note"><span class="fcm-note-key">edges</span> top-level array, not inside features</div>
+            <div class="fcm-guide-note"><span class="fcm-note-key">weight</span> −1 to +1 · blue = positive, red = negative</div>
+            <div class="fcm-guide-note"><span class="fcm-note-key">fcm_value</span> initial state 0–1 · defaults to 0.5</div>
+            <div class="fcm-guide-note"><span class="fcm-note-key">label</span> optional · falls back to name or id</div>
+          </div>
+        </div>
+      </details>
+
+    </div>
+
+    <div id="panel-footer">
+      <span id="layer-count">0 layers</span>
+    </div>
+  </aside>
+
+  <!-- ===== PROPERTIES PANEL ===== -->
+  <div id="info-panel">
+    <div class="panel-header">
+      <span class="panel-title" id="info-title">Properties</span>
+      <button class="icon-btn" id="close-info-btn" title="Close">✕</button>
+    </div>
+    <div id="info-content"></div>
+  </div>
+
+  <!-- ===== NAV CONTROLS ===== -->
+  <div id="nav-controls">
+    <div class="nav-group">
+      <button class="nav-btn" id="zoom-in-btn" title="Zoom in">+</button>
+      <button class="nav-btn" id="zoom-out-btn" title="Zoom out">−</button>
+    </div>
+    <div class="nav-group">
+      <button class="nav-btn" id="home-btn" title="Reset view">⌂</button>
+      <button class="nav-btn" id="north-btn" title="Reset north">N</button>
+    </div>
+  </div>
+
+  <!-- ===== COMPASS ===== -->
+  <div id="compass" title="Camera heading">
+    <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="30" cy="30" r="28" fill="rgba(11,17,32,0.85)" stroke="#1e2d45" stroke-width="1.5"/>
+      <text x="30" y="10" text-anchor="middle" font-size="8" fill="#94a3b8" font-family="system-ui">N</text>
+      <text x="30" y="54" text-anchor="middle" font-size="7" fill="#4b5563" font-family="system-ui">S</text>
+      <text x="7"  y="34" text-anchor="middle" font-size="7" fill="#4b5563" font-family="system-ui">W</text>
+      <text x="53" y="34" text-anchor="middle" font-size="7" fill="#4b5563" font-family="system-ui">E</text>
+      <g id="compass-needle" style="transform-origin:30px 30px">
+        <polygon points="30,13 33,30 30,27 27,30" fill="#ef4444"/>
+        <polygon points="30,47 33,30 30,33 27,30" fill="#64748b"/>
+      </g>
+    </svg>
+  </div>
+
+
+
+  <!-- ===== BUILDINGS LEGEND ===== -->
+  <div id="buildings-legend">
+    <div class="legend-title">Building types</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#60a5fa"></span>Residential</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#fb923c"></span>Commercial / Retail</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#34d399"></span>Office / Government</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#f87171"></span>Industrial</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#94a3b8"></span>Garage / Parking</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#fbbf24"></span>Education</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#f472b6"></span>Hospital</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#e879f9"></span>Religious</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#2dd4bf"></span>Hotel</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#a78bfa"></span>Stadium / Sports</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#cbd5e1"></span>Other / Unknown</div>
+  </div>
+
+  <!-- ===== STATUS BAR ===== -->
+  <div id="statusbar">
+    <div class="status-left">
+      <span class="status-dot"></span>
+      <span id="status-text">Ready</span>
+    </div>
+    <div class="status-right">
+      <span id="coords-display">—</span>
+      <span class="sep">|</span>
+      <span id="alt-display">—</span>
+    </div>
+  </div>
+
+  <!-- ===== NOTIFICATIONS ===== -->
+  <div id="notifications"></div>
+
+
+  <!-- ===== FCM TAB ===== -->
+  <!-- To remove FCM: delete this block + fcm.js + the FCM CSS section + fcm:'FCM' in app.js -->
+
+  <script src="app.js"></script>
+  <script src="fcm.js"></script>
+</body>
+</html>

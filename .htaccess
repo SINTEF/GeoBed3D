@@ -1,0 +1,6 @@
+Options -Indexes
+RewriteEngine On
+
+# Serve proxy.php as the homepage (handles password gate + config injection)
+RewriteRule ^$ proxy.php [L]
+RewriteRule ^index\.html$ proxy.php [L]

@@ -1,0 +1,73 @@
+{
+  "type": "FeatureCollection",
+  "edges": [
+    { "from": "sea_temperature",  "to": "salmon_louse",     "weight":  0.8 },
+    { "from": "sea_temperature",  "to": "algae",            "weight":  0.7 },
+    { "from": "sea_temperature",  "to": "salmon_population","weight": -0.5 },
+    { "from": "salmon_louse",     "to": "salmon_population","weight": -0.8 },
+    { "from": "algae",            "to": "salmon_population","weight": -0.6 },
+    { "from": "co2",              "to": "sea_temperature",  "weight":  0.7 },
+    { "from": "co2",              "to": "algae",            "weight":  0.5 },
+    { "from": "co2",              "to": "salmon_population","weight": -0.4 },
+    { "from": "sea_level_rise",   "to": "algae",            "weight":  0.3 },
+    { "from": "sea_level_rise",   "to": "salmon_population","weight": -0.3 },
+    { "from": "salmon_population","to": "salmon_louse",     "weight":  0.5 },
+    { "from": "salmon_population","to": "algae",            "weight": -0.2 }
+  ],
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [13.0, 68.6] },
+      "properties": {
+        "id": "sea_temperature",
+        "label": "Sea Temperature",
+        "fcm_value": 0.88
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [15.8, 68.5] },
+      "properties": {
+        "id": "salmon_louse",
+        "label": "Salmon Louse",
+        "fcm_value": 0.835
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [16.2, 68.8] },
+      "properties": {
+        "id": "salmon_population",
+        "label": "Salmon Population",
+        "fcm_value": 0.062
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [14.5, 69.2] },
+      "properties": {
+        "id": "sea_level_rise",
+        "label": "Sea Level Rise",
+        "fcm_value": 0.1
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [13.5, 68.0] },
+      "properties": {
+        "id": "algae",
+        "label": "Algae",
+        "fcm_value": 0.727
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [15.5, 69.3] },
+      "properties": {
+        "id": "co2",
+        "label": "CO₂",
+        "fcm_value": 0.5
+      }
+    }
+  ]
+}
