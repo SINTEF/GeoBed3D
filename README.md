@@ -4,6 +4,8 @@
 
 ![License](https://img.shields.io/badge/license-AGPL%20v3-blue)
 
+**Live demo:** https://hcilab.no/geobed3d/ — password: `Sintef0373`
+
 ## Setup
 
 **1. Copy the config template and fill in your keys:**
