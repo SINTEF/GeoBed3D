@@ -9,7 +9,7 @@
 <table>
 <tr>
 <td><img src="https://hcilab.no/geobed3d/promo/photo01.png"/></td>
-<td><img src="https://hcilab.no/geobed3d/promo/photo02.png"/></td>
+<td><img src="https://hcilab.no/geobed3d/promo/photo02.png?v=2"/></td>
 </tr>
 <tr>
 <td><img src="https://hcilab.no/geobed3d/promo/photo03.png"/></td>
