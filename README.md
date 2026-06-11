@@ -96,6 +96,15 @@ Sample files are in [`test_files/`](test_files/):
 
 Drag and drop them into the viewer to try it out.
 
+## GeoJSON format
+
+GeoBed3D reads standard GeoJSON with optional custom styling properties (`color`, `title`, `note`, `noteimage`, `icon`, etc.).
+
+- **Styling guide** — [`geojson-manual.html`](geojson-manual.html)
+- **Example file** — [`test_files/test-geojson.geojson`](test_files/test-geojson.geojson)
+
 ## FCM (Fuzzy Cognitive Map)
 
-Load a GeoJSON FeatureCollection where Point features are nodes and a top-level `edges` array defines weighted causal links. Hit **FCM** to animate propagation to equilibrium. See the in-app format reference for the schema.
+Load a GeoJSON FeatureCollection where Point features are nodes and a top-level `edges` array defines weighted causal links. Hit **FCM** to animate propagation to equilibrium.
+
+- **Example file** — [`test_files/test-fcm.geojson`](test_files/test-fcm.geojson)
