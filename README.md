@@ -6,6 +6,55 @@
 
 **Live demo:** https://hcilab.no/geobed3d/ — password: `Sintef0373`
 
+<table>
+<tr>
+<td><img src="https://hcilab.no/geobed3d/promo/photo01.png"/></td>
+<td><img src="https://hcilab.no/geobed3d/promo/photo02.png"/></td>
+</tr>
+<tr>
+<td><img src="https://hcilab.no/geobed3d/promo/photo03.png"/></td>
+<td><img src="https://hcilab.no/geobed3d/promo/photo04.png"/></td>
+</tr>
+<tr>
+<td><img src="https://hcilab.no/geobed3d/promo/photo05.png"/></td>
+<td><img src="https://hcilab.no/geobed3d/promo/photo06.png"/></td>
+</tr>
+<tr>
+<td><img src="https://hcilab.no/geobed3d/promo/photo07.png"/></td>
+<td><img src="https://hcilab.no/geobed3d/promo/photo08.png"/></td>
+</tr>
+<tr>
+<td><img src="https://hcilab.no/geobed3d/promo/photo09.png"/></td>
+<td><img src="https://hcilab.no/geobed3d/promo/photo10.png"/></td>
+</tr>
+<tr>
+<td><img src="https://hcilab.no/geobed3d/promo/photo11.png"/></td>
+<td><img src="https://hcilab.no/geobed3d/promo/photo12.png"/></td>
+</tr>
+<tr>
+<td><img src="https://hcilab.no/geobed3d/promo/photo13.png"/></td>
+<td><img src="https://hcilab.no/geobed3d/promo/photo14.png"/></td>
+</tr>
+<tr>
+<td><img src="https://hcilab.no/geobed3d/promo/photo15.png"/></td>
+<td><img src="https://hcilab.no/geobed3d/promo/photo16.png"/></td>
+</tr>
+</table>
+
+## Open data
+
+All data layers in GeoBed3D are sourced from free, open services — no proprietary data required.
+
+| Layer | Source | Where to get it |
+|---|---|---|
+| 3D terrain | Cesium World Terrain (via Cesium Ion) | [ion.cesium.com](https://ion.cesium.com) — free account |
+| 3D buildings | Cesium OSM Buildings (via Cesium Ion) | [ion.cesium.com](https://ion.cesium.com) — free account |
+| Roads, labels, outdoor basemap | OpenStreetMap via Maptiler | [maptiler.com](https://www.maptiler.com) — free tier |
+| Satellite imagery | ESRI World Imagery (ArcGIS) | No key required — used as default basemap |
+| Live sun & atmosphere | CesiumJS built-in | No key required |
+| Geotagged photos | Wikimedia Commons | No key required — fetched by location automatically |
+| Live AIS ship traffic | BarentsWatch | [barentswatch.no](https://www.barentswatch.no) — free account, register an API client |
+
 ## Setup
 
 **1. Copy the config template and fill in your keys:**
