@@ -108,3 +108,15 @@ GeoBed3D reads standard GeoJSON with optional custom styling properties (`color`
 Load a GeoJSON FeatureCollection where Point features are nodes and a top-level `edges` array defines weighted causal links. Hit **FCM** to animate propagation to equilibrium.
 
 - **Example file** — [`test_files/test-fcm.geojson`](test_files/test-fcm.geojson)
+
+## Future work
+
+- **More open data** — expand built-in data layers: weather, elevation profiles, administrative boundaries, and additional free global datasets
+- **Live data integrations** — connect to external APIs for real-time feeds beyond AIS: ocean sensors, metocean data, IoT streams, and vessel tracking services
+- **Bathymetry and ocean focus** — dedicated support for underwater terrain, seafloor mapping, and ocean data visualization as a first-class use case
+- **Session persistence** — save and restore the state of loaded layers, active toggles, and camera position across sessions
+- **CMS / API layer** — a backend content and data management layer for GeoBed3D, enabling organisations to publish, version, and serve geospatial datasets directly to the platform
+
+## Acknowledgements
+ 
+This platform was created by the [HCI group](https://www.sintef.no/en/digital/departments/sustainable-communication-technologies/human-computer-interaction/) of SINTEF Digital and [XR Lab Norway](https://www.xrlab.no) as a testbed for projects with geographical data and related visualizations.
