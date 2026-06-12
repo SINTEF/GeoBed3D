@@ -115,7 +115,7 @@ Load a GeoJSON FeatureCollection where Point features are nodes and a top-level 
 - **Live data integrations** — connect to external APIs for real-time feeds beyond AIS: ocean sensors, metocean data, IoT streams, and vessel tracking services
 - **Bathymetry and ocean focus** — dedicated support for underwater terrain, seafloor mapping, and ocean data visualization as a first-class use case
 - **Session persistence** — save and restore the state of loaded layers, active toggles, and camera position across sessions
-- **CMS / API layer** — a backend content and data management layer for GeoBed3D, enabling organisations to publish, version, and serve geospatial datasets directly to the platform
+- **CMS / API layer** — a backend content and data management layer for GeoBed3D, enabling organisations to publish, version, and serve geospatial datasets directly to the platform (Sanity.io? Pocketbase?)
 
 ## Acknowledgements
  
